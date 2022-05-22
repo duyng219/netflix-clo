@@ -5,8 +5,8 @@ session_start();
 date_default_timezone_set("Asia/Ho_Chi_Minh");
 
 try {
-    $conn = new PDO("mysql:dbname=reeceflix;host=localhost","root","");
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+    $con = new PDO("mysql:dbname=reeceflix;host=localhost","root","");
+    $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 } catch (PDOException $e) {
     exit("Connection failed: " . $e->getMessage());
 }
