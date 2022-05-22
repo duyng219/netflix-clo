@@ -8,6 +8,7 @@ class Account {
         $this->conn = $conn;
     }
 
+    // REGISTER
     public function register($fn, $ln, $un, $em, $em2, $pw, $pw2) {
         $this->validateFirstName($fn);
         $this->validateLastName($ln);
@@ -21,8 +22,27 @@ class Account {
         return false;
     }
 
+    // LOGIN
+    public function login($un, $pw) {
+        $pw = hash("sha512", $pw); // Mã hóa password bằng hàm hash()
+
+        $query = $this->conn->prepare("SELECT * FROM users WHERE username=:un AND password=:pw");
+        $query->bindValue(":un", $un);
+        $query->bindValue(":pw", $pw);
+
+        $query->execute();
+
+        if($query->rowCount() == 1) {
+            return true;
+        }
+
+        array_push($this->errorArray, Constants::$loginFailed);
+        return false;
+    }
+
+    // INSERT DATA TO DATABASE
     private function insertUserDetails($fn, $ln, $un, $em, $pw) {
-        $pw = hash("sha512", $pw);
+        $pw = hash("sha512", $pw); // Mã hóa password bằng hàm hash()
 
         $query = $this->conn->prepare("INSERT INTO users (firstName, lastName, username, email, password)
                                         VALUES (:fn, :ln, :un, :em, :pw)");
@@ -35,6 +55,7 @@ class Account {
         return $query->execute();
     }
 
+    // CHECK VALIDATE FORM REGISTER AND LOGIN
     private function validateFirstName($fn) {
         if(strlen($fn) < 2 || strlen($fn) > 25) {
             array_push($this->errorArray, Constants::$firstNameCharacters);
@@ -94,7 +115,7 @@ class Account {
         }
     }
 
-
+    // RETURN ERROR VIEWS
     public function getError($error) {
         if(in_array($error, $this->errorArray)) {
             if(in_array($error, $this->errorArray)) {
