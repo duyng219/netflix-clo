@@ -1,11 +1,11 @@
 <?php
 class Account {
 
-    private $conn;
+    private $con;
     private $errorArray = array();
 
-    public function __construct($conn) {
-        $this->conn = $conn;
+    public function __construct($con) {
+        $this->con = $con;
     }
 
     // REGISTER
@@ -26,7 +26,7 @@ class Account {
     public function login($un, $pw) {
         $pw = hash("sha512", $pw); // Mã hóa password bằng hàm hash()
 
-        $query = $this->conn->prepare("SELECT * FROM users WHERE username=:un AND password=:pw");
+        $query = $this->con->prepare("SELECT * FROM users WHERE username=:un AND password=:pw");
         $query->bindValue(":un", $un);
         $query->bindValue(":pw", $pw);
 
@@ -44,7 +44,7 @@ class Account {
     private function insertUserDetails($fn, $ln, $un, $em, $pw) {
         $pw = hash("sha512", $pw); // Mã hóa password bằng hàm hash()
 
-        $query = $this->conn->prepare("INSERT INTO users (firstName, lastName, username, email, password)
+        $query = $this->con->prepare("INSERT INTO users (firstName, lastName, username, email, password)
                                         VALUES (:fn, :ln, :un, :em, :pw)");
         $query->bindValue(":fn", $fn);
         $query->bindValue(":ln", $ln);
@@ -74,7 +74,7 @@ class Account {
             return;
         }
 
-        $query = $this->conn->prepare("SELECT  * FROM users WHERE username=:un");
+        $query = $this->con->prepare("SELECT  * FROM users WHERE username=:un");
         $query->bindValue(":un", $un);
 
         $query->execute();
@@ -94,7 +94,7 @@ class Account {
             array_push($this->errorArray, Constants::$emailInvalid);
         }
 
-        $query = $this->conn->prepare("SELECT  * FROM users WHERE email=:em");
+        $query = $this->con->prepare("SELECT  * FROM users WHERE email=:em");
         $query->bindValue(":em", $em);
 
         $query->execute();
