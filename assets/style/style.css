@@ -108,6 +108,18 @@ body {
     display: flex;
 }
 
+.previewContainer.small {
+    width: 230px;
+    height: 129px;
+    margin-right: 4px;
+    display: inline-flex;
+}
+.previewContainer.small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .previewContainer > .previewImage {
     width: 100%;
 }
